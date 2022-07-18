@@ -1,5 +1,6 @@
-canvas vide de base
-clique met des points
+canvas vide de base //
+clique met des points //
+
 dessine polygone
 detecte interieur polygone souris
 
