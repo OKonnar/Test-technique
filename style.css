@@ -1,10 +1,23 @@
 *   {
-    margin: 0;
-    padding: 0;
+    margin: 10;
+    padding: 10;
     box-sizing: border-box;
-    background-color: rgb(204, 136, 72);
+    background-color: rgb(230, 165, 104);
+    border-radius: 30px;
+    padding: 8px;
+    text-align:  center;
+}
+
+#gen {
+    background-color: rgb(236, 225, 225);
+}
+
+#eff {
+    background-color: rgb(236, 225, 225);
 }
 
 #canvas {
-    border: 2px solid black;
+    border: 5px solid black;
+    padding: 0;
 }
+
