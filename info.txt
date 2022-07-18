@@ -1,0 +1,6 @@
+canvas vide de base
+clique met des points
+dessine polygone
+detecte interieur polygone souris
+
+utilitaire en ligne de commande en C, donne taille de ce que tu lui donne en input (dossier ou fichier)
