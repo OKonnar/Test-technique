@@ -18,7 +18,7 @@ function drawDot(ctx)
 
     canvas.addEventListener('mousedown', (e) => {
         ctx.fillStyle = 'black';
-        ctx.fillRect(e.x, e.y, 5, 5);
+        ctx.fillRect(e.x - canvas.getBoundingClientRect().left - 7, e.y - canvas.getBoundingClientRect().top - 7, 5, 5);
         temp = [e.x, e.y];
         coordinates = coordinates.concat([temp]);
         console.log(coordinates);
