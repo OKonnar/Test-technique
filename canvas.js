@@ -5,7 +5,11 @@ const eff = document.querySelector('#eff');
 let coordinates = [];
 
 eff.addEventListener('click', () => {
-    console.log("No !");
+    ctx.clearRect(0, 0, 1920, 1080);
+    ctx.fillStyle = 'grey'
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'black';
+    coordinates = [];
 })
 
 gen.addEventListener('click', () => {
