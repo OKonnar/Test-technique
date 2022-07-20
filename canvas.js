@@ -53,11 +53,11 @@ window.addEventListener("resize", () => {
 
 function findNextDot (temp, coordinates) {
 
-    let deltaCoord = [];
-    let deltaTemp = [];
-    let deltaFinal = [];
-    let index = 0;
-    let result = [];
+    let deltaCoord = []; // delta X ET Y (en int **)
+    let deltaTemp = []; // delta X ET Y (en int *) parce que je sais pas .concat sans faire une variable temporaire
+    let deltaFinal = []; // delta X + Y (en int *)
+    let index = 0; // index pour relier le delta le plus petit avec la coordonée corespondante + permet de .slice l'array
+    let result = []; // variable temporaire pour return apres avoir .slice
 
     for (let i = 0; i != coordinates.length; i++) {
         deltaTemp = [Math.abs(temp[0] - coordinates[i][0]), Math.abs(temp[1] - coordinates[i][1])] // delta distance entre un point et les autres coordonées, valeur absolue pour facilité
@@ -75,7 +75,6 @@ function findNextDot (temp, coordinates) {
 
 function drawShape() {
 
-    console.log(coordinates);
     const anchor = coordinates[0];
     let temp = coordinates.shift();
     let result = [];
@@ -91,3 +90,13 @@ function drawShape() {
     ctx.lineTo(anchor[0], anchor[1]);
     ctx.stroke();
 }
+
+/* EXPLICATION ALGO
+
+On commence au premier point mis,
+On le passe dans une fonction qui trouve le points le plus proche en le comparant a un array contenant toute les autres coordonnées
+Le point trouvée devient le prochain poin qu'on va comparer a l'array contenant le reste des coordonnées
+On repete ca jusqu'a ce que le tableau soit vide
+et on relie le dernier points obtenu avec le tout premier
+
+*/
