@@ -25,3 +25,5 @@ Horraires :
         13h -> 17h debut test et découverte canva api
     Mardi :
         10h -> 12h finition prérequis / debut algorithme
+    Mercredi :
+        17h -> 
