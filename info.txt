@@ -7,9 +7,9 @@ prérequis - 0 - :
     bouton effacer //
 
 algo - 1 - :
-    algo recherche point ?
-    algo dessine ligne ?
-    polygone complet ?
+    algo recherche point //
+    algo dessine ligne //
+    polygone complet //
 
 algo - 2 - :
     detecte interieur polygone souris
@@ -26,4 +26,4 @@ Horraires :
     Mardi :
         10h -> 12h finition prérequis / debut algorithme
     Mercredi :
-        17h -> 
+        17h -> 18h30 algo creation de polygone complet

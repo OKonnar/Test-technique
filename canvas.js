@@ -57,6 +57,7 @@ function findNextDot (temp, coordinates) {
     let deltaTemp = [];
     let deltaFinal = [];
     let index = 0;
+    let result = [];
 
     for (let i = 0; i != coordinates.length; i++) {
         deltaTemp = [Math.abs(temp[0] - coordinates[i][0]), Math.abs(temp[1] - coordinates[i][1])] // delta distance entre un point et les autres coordonées, valeur absolue pour facilité
@@ -67,33 +68,26 @@ function findNextDot (temp, coordinates) {
         if (i > 0 && deltaFinal[i] < deltaFinal[index])
             index = i;
     }
-    return coordinates[index];
+    result = coordinates[index];
+    coordinates.splice(index, 1);
+    return result;
 }
 
 function drawShape() {
 
-    const anchor = coordinates.shift();
-    let temp = anchor;
+    console.log(coordinates);
+    const anchor = coordinates[0];
+    let temp = coordinates.shift();
     let result = [];
 
     ctx.beginPath();
     ctx.moveTo(anchor[0], anchor[1]);
-    for (; coordinates.length > 0;) {
+    for (; coordinates.length != 0;) {
         result = findNextDot(temp, coordinates);
-        temp = coordinates.shift();
+        temp = result;
         ctx.lineTo(result[0], result[1]);
-        ctx.moveTo(result[0], result[1]);
         ctx.stroke();
     }
     ctx.lineTo(anchor[0], anchor[1]);
     ctx.stroke();
-    /*
-    console.log(coordinates.length);
-    console.log(coordinates);
-    ctx.beginPath();
-    console.log(anchor[0], anchor[1]);
-    ctx.moveTo(anchor[0], anchor[1]);
-    ctx.lineTo(500, 500);
-    ctx.stroke();
-    */
 }
