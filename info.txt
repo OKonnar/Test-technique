@@ -15,7 +15,6 @@ algo - 2 - :
     detecte interieur polygone souris //
 
 
-
 utilitaire en ligne de commande en C, donne taille de ce que tu lui donne en input (dossier ou fichier)
 
 
@@ -30,3 +29,4 @@ Horraires :
     Jeudi :
         11h30h -> 13h recherche solution algo detection
         13h -> 14h15 application de l'algo de detection
+        14h30 -> 16h creation de la base pour "du"
