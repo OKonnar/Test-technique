@@ -1,23 +1,23 @@
 const canvas = document.querySelector("#canvas");
-const ctx = canvas.getContext('2d');
-const gen = document.querySelector('#gen');
-const eff = document.querySelector('#eff');
+const ctx = canvas.getContext("2d");
+const gen = document.querySelector("#gen");
+const eff = document.querySelector("#eff");
+var isHit = false
+var shapeToggle = false;
 let coordinates = [];
+var imgData = [];
 
-eff.addEventListener('click', () => {
+eff.addEventListener("click", () => {
 
-    ctx.clearRect(0, 0, 1920, 1080);
-    ctx.fillStyle = 'grey'
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'black';
-    coordinates = [];
+    clearCanvas(1);
 })
 
-gen.addEventListener('click', () => {
+gen.addEventListener("click", () => {
 
-    if (coordinates.length > 2)
+    if (coordinates.length > 2) {
         drawShape();
-    else
+        shapeToggle = true;
+    } else
         alert("nope");
 })
 
@@ -27,29 +27,51 @@ window.addEventListener("load", () => {
     canvas.width = window.innerWidth / 1.1;
     ctx.fillStyle = 'grey'
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = "black";
 })
 
-canvas.addEventListener('mousedown', (e) => {
+canvas.addEventListener("mouseup", () => {
 
-    temp = [e.x - canvas.getBoundingClientRect().left - 7, e.y - canvas.getBoundingClientRect().top - 7]; // position absolue - offset canvas - offset arbitraire
-    ctx.fillRect(temp[0], temp[1], 5, 5);
-    coordinates = coordinates.concat([temp]);
+    if (isHit == true) {
+        canvas.style.border = "5px solid #a8de5d"
+        isHit = false;
+    }
+})
+
+canvas.addEventListener("mousedown", (e) => {
+
+    if (shapeToggle == true) {
+        imgData = ctx.getImageData(e.x - canvas.getBoundingClientRect().left - 7, e.y - canvas.getBoundingClientRect().top - 7, 1, 1);
+        if (imgData.data[0] == 0 && imgData.data[1] == 0 && imgData.data[2] == 0) {
+            canvas.style.border = "5px solid #de6c5d";
+            isHit = true;
+        }
+    } else if (shapeToggle == false) {
+        temp = [e.x - canvas.getBoundingClientRect().left - 7, e.y - canvas.getBoundingClientRect().top - 7]; // position absolue - offset canvas - offset arbitraire
+        ctx.fillRect(temp[0], temp[1], 5, 5);
+        coordinates = coordinates.concat([temp]);
+    }
 })
 
 window.addEventListener("resize", () => {
 
     canvas.height = window.innerHeight / 1.2;
     canvas.width = window.innerWidth / 1.1;
-
-    if (coordinates.length > 0) { // le canva fait un truc bizarre quand je resize et il y a encore des points dessus, alors je le reset
-        ctx.fillStyle = 'grey'
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'black';
-        coordinates = [];
-        ctx.clearRect(0, 0, 1920, 1080);
-    }
+     // le canva fait un truc bizarre quand je resize et il y a encore des points dessus, alors je le reset
+    clearCanvas(1);
 })
+
+function clearCanvas(id) {
+
+    ctx.clearRect(0, 0, 1920, 1080);
+    ctx.fillStyle = "grey"
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "black";
+    if (id == 1) {
+        coordinates = [];
+        shapeToggle = false;
+    }
+}
 
 function findNextDot (temp, coordinates) {
 
@@ -64,7 +86,7 @@ function findNextDot (temp, coordinates) {
         deltaCoord = deltaCoord.concat([deltaTemp]);
     }
     for (let i = 0; i != deltaCoord.length; i++) {
-        deltaFinal = deltaFinal.concat(deltaCoord[i][0] + deltaCoord[i][1]); // on additione le delta x et le delta y ce qui donne une distance (fausse, il faudrait faire thales pour avoir la vrai distance mais c'est pas utile)
+        deltaFinal = deltaFinal.concat(deltaCoord[i][0] + deltaCoord[i][1]); // on additione le delta x et le delta y ce qui donne une distance (fausse, il faudrait faire pythagore pour avoir la vrai distance mais c'est pas utile)
         if (i > 0 && deltaFinal[i] < deltaFinal[index])
             index = i;
     }
@@ -81,6 +103,7 @@ function drawShape() {
 
     ctx.beginPath();
     ctx.moveTo(anchor[0], anchor[1]);
+    clearCanvas(0);
     for (; coordinates.length != 0;) {
         result = findNextDot(temp, coordinates);
         temp = result;
@@ -88,7 +111,9 @@ function drawShape() {
         ctx.stroke();
     }
     ctx.lineTo(anchor[0], anchor[1]);
+    ctx.closePath();
     ctx.stroke();
+    ctx.fill();
 }
 
 /* EXPLICATION ALGO

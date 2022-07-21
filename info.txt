@@ -12,7 +12,7 @@ algo - 1 - :
     polygone complet //
 
 algo - 2 - :
-    detecte interieur polygone souris
+    detecte interieur polygone souris //
 
 
 
@@ -27,3 +27,6 @@ Horraires :
         10h -> 12h finition prérequis / debut algorithme
     Mercredi :
         17h -> 18h30 algo creation de polygone complet
+    Jeudi :
+        11h30h -> 13h recherche solution algo detection
+        13h -> 14h15 application de l'algo de detection
