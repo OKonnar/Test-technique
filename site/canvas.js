@@ -73,55 +73,17 @@ function clearCanvas(id) {
     }
 }
 
-function findNextDot (temp, coordinates) {
-
-    let deltaCoord = []; // delta X ET Y (en int **)
-    let deltaTemp = []; // delta X ET Y (en int *) parce que je sais pas .concat sans faire une variable temporaire
-    let deltaFinal = []; // delta X + Y (en int *)
-    let index = 0; // index pour relier le delta le plus petit avec la coordonée corespondante + permet de .slice l'array
-    let result = []; // variable temporaire pour return apres avoir .slice
-
-    for (let i = 0; i != coordinates.length; i++) {
-        deltaTemp = [Math.abs(temp[0] - coordinates[i][0]), Math.abs(temp[1] - coordinates[i][1])] // delta distance entre un point et les autres coordonées, valeur absolue pour facilité
-        deltaCoord = deltaCoord.concat([deltaTemp]);
-    }
-    for (let i = 0; i != deltaCoord.length; i++) {
-        deltaFinal = deltaFinal.concat(deltaCoord[i][0] + deltaCoord[i][1]); // on additione le delta x et le delta y ce qui donne une distance (fausse, il faudrait faire pythagore pour avoir la vrai distance mais c'est pas utile)
-        if (i > 0 && deltaFinal[i] < deltaFinal[index])
-            index = i;
-    }
-    result = coordinates[index];
-    coordinates.splice(index, 1);
-    return result;
-}
-
 function drawShape() {
 
-    const anchor = coordinates[0];
-    let temp = coordinates.shift();
-    let result = [];
-
     ctx.beginPath();
-    ctx.moveTo(anchor[0], anchor[1]);
+    ctx.moveTo(coordinates[0][0], coordinates[0][1]);
     clearCanvas(0);
-    for (; coordinates.length != 0;) {
-        result = findNextDot(temp, coordinates);
-        temp = result;
-        ctx.lineTo(result[0], result[1]);
+    for (var i = 1; i != coordinates.length; i++) {
+        ctx.lineTo(coordinates[i][0], coordinates[i][1]);
         ctx.stroke();
     }
-    ctx.lineTo(anchor[0], anchor[1]);
+    ctx.lineTo(coordinates[0][0], coordinates[0][1]);
     ctx.closePath();
     ctx.stroke();
     ctx.fill();
 }
-
-/* EXPLICATION ALGO
-
-On commence au premier point mis,
-On le passe dans une fonction qui trouve le points le plus proche en le comparant a un array contenant toute les autres coordonnées
-Le point trouvée devient le prochain poin qu'on va comparer a l'array contenant le reste des coordonnées
-On repete ca jusqu'a ce que le tableau soit vide
-et on relie le dernier points obtenu avec le tout premier
-
-*/
