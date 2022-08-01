@@ -123,23 +123,32 @@ function checkIfCrossingLine(point, polygon) {
 
         if (hypothenuseA + hypothenuseB > hypothenuseC - 0.1
         && hypothenuseA + hypothenuseB < hypothenuseC + 0.1)
-            ctx.fillRect(point[0], point[1], 5, 5);
+            return true;
     }
 
     hypothenuseA = getHypothenuse(point, polygon[0]);
     hypothenuseB = getHypothenuse(point, polygon[i]);
     hypothenuseC = getHypothenuse(polygon[0], polygon[i]);
 
-    if (hypothenuseA + hypothenuseB > hypothenuseC - 0.1
-    && hypothenuseA + hypothenuseB < hypothenuseC + 0.1)
-        ctx.fillRect(point[0], point[1], 5, 5);
+    if (hypothenuseA + hypothenuseB >= hypothenuseC - 0.1
+    && hypothenuseA + hypothenuseB <= hypothenuseC + 0.1)
+        return true;
+    return false;
 }
 
 function isPointInsidePolygon(point, polygon) { // polygon is a list/array or points
 
+    var lineCrossed = 0;
+    var toggle = false;
+
     if (isInsideCheckArea(point, polygon) == false)
         return;
     for (; point[0] != canvas.width; point[0]++)
-        checkIfCrossingLine(point, polygon);
-    isHit = true;
+        if (checkIfCrossingLine(point, polygon) == true && toggle == false) {
+            lineCrossed++;
+            toggle = true;
+        } else if (checkIfCrossingLine(point, polygon) == false && toggle == true)
+            toggle = false;
+    if (lineCrossed % 2 == 1)
+        isHit = true;
 }
