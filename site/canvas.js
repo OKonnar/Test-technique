@@ -54,7 +54,6 @@ window.addEventListener("resize", () => {
 
     canvas.height = window.innerHeight / 1.2;
     canvas.width = window.innerWidth / 1.1;
-     // le canva fait un truc bizarre quand je resize et il y a encore des points dessus, alors je le reset
     clearCanvas(1);
 })
 
@@ -93,7 +92,6 @@ function isInsideCheckArea(point, polygon) {
         xArr = xArr.concat(polygon[i][0]);
         yArr = yArr.concat(polygon[i][1]);
     }
-
     if ((point[0] > Math.min(...xArr) && point[0] < Math.max(...xArr))
     && (point[1] > Math.min(...yArr) && point[1] < Math.max(...yArr)))
         return true;
@@ -114,7 +112,6 @@ function checkIfCrossingLine(point, polygon) {
     var hypothenuseA = [];
     var hypothenuseB = [];
     var hypothenuseC = [];
-    ctx.fillStyle = "Red";
 
     for (; i != polygon.length - 1; i++) {
         hypothenuseA = getHypothenuse(point, polygon[i]);
@@ -125,7 +122,6 @@ function checkIfCrossingLine(point, polygon) {
         && hypothenuseA + hypothenuseB < hypothenuseC + 0.1)
             return true;
     }
-
     hypothenuseA = getHypothenuse(point, polygon[0]);
     hypothenuseB = getHypothenuse(point, polygon[i]);
     hypothenuseC = getHypothenuse(polygon[0], polygon[i]);
@@ -143,7 +139,8 @@ function isPointInsidePolygon(point, polygon) { // polygon is a list/array or po
 
     if (isInsideCheckArea(point, polygon) == false)
         return;
-    for (; point[0] != canvas.width; point[0]++)
+
+    for (; point[0] < window.innerWidth; point[0]++)
         if (checkIfCrossingLine(point, polygon) == true && toggle == false) {
             lineCrossed++;
             toggle = true;

@@ -31,5 +31,7 @@ Horraires :
         13h -> 14h15 application de l'algo de detection
         14h30 -> 16h creation de la base pour "du"
     Lundi :
-        8h30 -> 12h30 recherche et application du "ray casting algorythm"
+        9h30 -> 12h30 recherche et application du "ray casting algorythm"
         15h -> 15h15 correctif et finition "ray casting algorythm"
+    Vendredi :
+        9h30 -> 10h Correction de bug
