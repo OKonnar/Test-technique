@@ -35,3 +35,5 @@ Horraires :
         15h -> 15h15 correctif et finition "ray casting algorythm"
     Vendredi :
         9h30 -> 10h Correction de bug
+    Mercredi :
+        9h30 -> 11h30 Mise en place du nouvelle algorythme, correction de bug et changement de "concat" en "push"

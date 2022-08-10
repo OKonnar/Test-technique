@@ -5,6 +5,7 @@ const eff = document.querySelector("#eff");
 var isHit = false
 var shapeToggle = false;
 let coordinates = [];
+var exceptionCatcher = 0;
 
 eff.addEventListener("click", () => {
 
@@ -14,6 +15,7 @@ eff.addEventListener("click", () => {
 gen.addEventListener("click", () => {
 
     if (coordinates.length > 2) {
+        coordinates.push(coordinates[0]);
         drawShape();
         shapeToggle = true;
     } else
@@ -46,7 +48,7 @@ canvas.addEventListener("mousedown", (e) => {
     else if (shapeToggle == false) {
         temp = [e.x - canvas.getBoundingClientRect().left - 7, e.y - canvas.getBoundingClientRect().top - 7]; // position absolue - offset canvas - offset arbitraire
         ctx.fillRect(temp[0], temp[1], 5, 5);
-        coordinates = coordinates.concat([temp]);
+        coordinates.push(temp);
     }
 })
 
@@ -83,14 +85,15 @@ function drawShape() {
     ctx.stroke();
 }
 
+// pré-test pour savoir si mon curseur est dans la zone du polygone
 function isInsideCheckArea(point, polygon) {
 
     var xArr = [];
     var yArr = [];
 
     for (var i = 0; i != polygon.length; i++) {
-        xArr = xArr.concat(polygon[i][0]);
-        yArr = yArr.concat(polygon[i][1]);
+        xArr.push(polygon[i][0]);
+        yArr.push(polygon[i][1]);
     }
     if ((point[0] > Math.min(...xArr) && point[0] < Math.max(...xArr))
     && (point[1] > Math.min(...yArr) && point[1] < Math.max(...yArr)))
@@ -98,54 +101,65 @@ function isInsideCheckArea(point, polygon) {
     return false;
 }
 
-function getHypothenuse(a, b) {
+function checkWichSide(A, B, C) {
 
-    xDelta = Math.abs(a[0] - b[0]);
-    yDelta = Math.abs(a[1] - b[1]);
+    // je formate pour avoir un résultat non biaiser par le sens des coordonées
+    var top = B[1] > C[1] ? C : B;
+    var bot = B[1] > C[1] ? B : C;
 
-    return Math.sqrt(Math.pow(xDelta, 2) + Math.pow(yDelta, 2));
+    // return true si a gauche et false si a droite
+    return ((top[0] - A[0]) * (bot[1] - A[1]) - (top[1] - A[1]) * (bot[0] - A[0]) > 0);
 }
 
-function checkIfCrossingLine(point, polygon) {
+function isACrossingLine(A, B, C) {
 
-    var i = 0;
-    var hypothenuseA = [];
-    var hypothenuseB = [];
-    var hypothenuseC = [];
+    // exception si mon point est a l'intersection de deux segment sur l'axe Y
+    if (A[1] == B[1] || A[1] == C[1])
+        if (checkWichSide(A, B, C) == true) {
+            exceptionCatcher++;
+            return 0;
+        }
 
-    for (; i != polygon.length - 1; i++) {
-        hypothenuseA = getHypothenuse(point, polygon[i]);
-        hypothenuseB = getHypothenuse(point, polygon[i + 1]);
-        hypothenuseC = getHypothenuse(polygon[i], polygon[i + 1]);
+    // si (comparer a mon point) je n'ai pas de Y+ et Y-
+    if (!(B[1] > A[1] && C[1] < A[1] || B[1] < A[1] && C[1] > A[1]))
+        return 0;
 
-        if (hypothenuseA + hypothenuseB > hypothenuseC - 0.1
-        && hypothenuseA + hypothenuseB < hypothenuseC + 0.1)
-            return true;
-    }
-    hypothenuseA = getHypothenuse(point, polygon[0]);
-    hypothenuseB = getHypothenuse(point, polygon[i]);
-    hypothenuseC = getHypothenuse(polygon[0], polygon[i]);
+    // si (comparer a mon point) le segment a deux valeur X superieur ou égal
+    if (B[0] >= A[0] && C[0] >= A[0])
+        return 1;
 
-    if (hypothenuseA + hypothenuseB >= hypothenuseC - 0.1
-    && hypothenuseA + hypothenuseB <= hypothenuseC + 0.1)
-        return true;
-    return false;
+    // si (toujours comparer a mon point) le segment a un X- et un X+
+    if (B[0] > A[0] && C[0] < A[0] || B[0] < A[0] && C[0] > A[0])
+        if (checkWichSide(A, B, C) == true)
+            return 1;
+
+    return 0;
 }
 
 function isPointInsidePolygon(point, polygon) { // polygon is a list/array or points
 
     var lineCrossed = 0;
-    var toggle = false;
 
-    if (isInsideCheckArea(point, polygon) == false)
+    if (isInsideCheckArea(point, polygon) == false) {
+        ctx.fillStyle = "red"
+        ctx.fillRect(point[0], point[1], 5, 5);
         return;
+    }
 
-    for (; point[0] < window.innerWidth; point[0]++)
-        if (checkIfCrossingLine(point, polygon) == true && toggle == false) {
+    for (var i = 0; i != polygon.length - 1; i++) {
+        lineCrossed += isACrossingLine(point, polygon[i], polygon[i + 1]);
+        if (exceptionCatcher == 2) {
             lineCrossed++;
-            toggle = true;
-        } else if (checkIfCrossingLine(point, polygon) == false && toggle == true)
-            toggle = false;
-    if (lineCrossed % 2 == 1)
+            exceptionCatcher = 0;
+        }
+    }
+
+    if (lineCrossed % 2 == 1) {
         isHit = true;
+        ctx.fillStyle = "green"
+        ctx.fillRect(point[0], point[1], 5, 5);
+    } else {
+        ctx.fillStyle = "red"
+        ctx.fillRect(point[0], point[1], 5, 5);
+    }
 }
